@@ -50,7 +50,7 @@ REQUIRED_FILES = [
     "dosen_embeddings.npy",
     "dosen_profiles.csv",
     "config.json",
-    "indo_sbert_model",          # folder
+
 ]
 
 def check_models():
@@ -68,8 +68,11 @@ def load_tfidf():
 @st.cache_resource(show_spinner="Memuat SBERT embeddings & model…")
 def load_sbert_artifacts():
     from sentence_transformers import SentenceTransformer
+    # Embeddings dosen diambil dari file .npy (hasil notebook)
     embeddings = np.load(MODEL_DIR / "dosen_embeddings.npy")
-    model      = SentenceTransformer(str(MODEL_DIR / "indo_sbert_model"))
+    # Model hanya dipakai untuk encode query baru → load dari HuggingFace
+    # (otomatis di-cache oleh library, tidak perlu re-download setiap restart)
+    model = SentenceTransformer("firqaaa/indo-sentence-bert-base")
     return model, embeddings
 
 @st.cache_data
